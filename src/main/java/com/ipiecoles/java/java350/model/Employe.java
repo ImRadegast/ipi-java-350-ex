@@ -1,5 +1,7 @@
 package com.ipiecoles.java.java350.model;
 
+import org.w3c.dom.ranges.RangeException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -113,7 +115,18 @@ case SATURDAY:var = var + 1;
     }
 
     //Augmenter salaire
-    //public void augmenterSalaire(double pourcentage){}
+
+    public double augmenterSalaire(double pourcentage){
+    if (pourcentage == Double.NaN){
+        throw new NullPointerException();
+        }
+    if (pourcentage<0){
+        throw new IllegalArgumentException("La valeur entrée est négative");
+    }
+
+        double salaire = this.salaire;
+        return  salaire += (salaire * pourcentage)/100;
+    }
 
     public Long getId() {
         return id;

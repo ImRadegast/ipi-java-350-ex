@@ -1,13 +1,78 @@
 package com.ipiecoles.java.java350.model;
 
+import com.thoughtworks.gauge.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+
 import java.time.LocalDate;
 
 public class EmployeTest {
+
+
+    @ParameterizedTest
+    @CsvSource({
+            ",10,6,2.5,100",
+            "'M12345',10,,1.0,81",
+            "'M67891',20,1,1.0,50",
+            "'M23456',30,0,1.0,45",
+            "'M78912',05,1,0.5,62",
+            "'C12345',7,1,1.0,0",
+            "'C67891',5,1,1.0,2",
+            "'C23456',2,1,1.0,65",
+            "'C78912',0,2,1.0,45",
+            "'C34567',3,2,1.0,0",
+            "'C89123',0,1,0.5,60",
+            "'C45678',0,1,1.0,0"
+
+    })
+    public void testGetNbRtt(
+            String matricule,
+            Integer nbAnneesAnciennete,
+            Integer performance,
+            Double tauxActivite,
+            Double prime
+    ){
+        //Given
+        Employe employe = new Employe("Doe", "John", matricule,
+                LocalDate.now().minusYears(nbAnneesAnciennete), 2500d, performance, tauxActivite);
+
+        //When
+        Double primeObtenue = employe.getPrimeAnnuelle();
+
+        //Then
+        Assertions.assertThat(primeObtenue).isEqualTo(prime);
+    }
+
+
+    @Test
+
+    public void testAugmenterSalaireNan(){
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(2000d);
+        //When
+        Double augmenterSalaire = employe.augmenterSalaire(Double.NaN);
+        System.out.println(augmenterSalaire.toString());
+        //Then
+
+        Assertions.assertThatIllegalArgumentException();
+    }
+
+    @Test
+    public void testAugmenterSalaireNegatif(){
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(2000d);
+        //When
+
+        //Then
+        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> employe.augmenterSalaire(-10))
+                .withMessage("La valeur entrée est négative");
+    }
+
 
     @Test
     public void testGetNbAnneesAncienneteDateEmbaucheNow(){
@@ -67,17 +132,22 @@ public class EmployeTest {
         Assertions.assertThat(nbAnneesAnciennete).isZero();
     }
 
+
     @ParameterizedTest
     @CsvSource({
-            "'M12345',0,1,1.0,1700.0",
-            "'M12345',2,1,1.0,1900.0",
-            "'M12345',0,1,0.5,850.0",
-            "'T12346',0,1,1.0,1000.0",
-            "'T12346',5,1,1.0,1500.0",
-            "'T12346',0,2,1.0,2300.0",
-            "'T12346',3,2,1.0,2600.0",
-            ",0,1,1.0,1000.0",
-            "'T12346',0,,1.0,1000.0"
+            ",10,6,2.5,100",
+            "'M12345',10,,1.0,81",
+            "'M67891',20,1,1.0,50",
+            "'M23456',30,0,1.0,45",
+            "'M78912',05,1,0.5,62",
+            "'C12345',7,1,1.0,0",
+            "'C67891',5,1,1.0,2",
+            "'C23456',2,1,1.0,65",
+            "'C78912',0,2,1.0,45",
+            "'C34567',3,2,1.0,0",
+            "'C89123',0,1,0.5,60",
+            "'C45678',0,1,1.0,0"
+
     })
     public void testGetPrimeAnnuelleManagerPerformanceBasePleinTemps(
             String matricule,
